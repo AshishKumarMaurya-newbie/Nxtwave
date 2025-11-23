@@ -10,12 +10,14 @@ RUN apt-get update && apt-get install -y \
 # Copy project files
 COPY pyproject.toml ./
 COPY app.py ./
-COPY knowledge_base.txt ./
+
+# Copy knowledge base if it exists
+COPY knowledge_base.txt* ./
 
 # Install Python dependencies
 RUN pip install --no-cache-dir -e .
 
-# Expose port (Render uses PORT env variable)
+# Expose port
 EXPOSE 8000
 
 # Run the app - PORT is set by Render
