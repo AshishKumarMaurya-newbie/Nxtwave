@@ -225,6 +225,18 @@ async def serve_static(file_path: str):
     
     return {"error": "File not found"}, 404
 
+@app.get("/health")
+async def health_check():
+    """Health check endpoint with file availability"""
+    return {
+        "status": "healthy",
+        "files": {
+            "index.html": os.path.exists("index.html"),
+            "styles.css": os.path.exists("styles.css"),
+            "rag_initialized": qa_chain is not None
+        }
+    }
+
 @app.post("/webhook")
 async def whatsapp_webhook(Body: str = Form(...), From: str = Form(...)):
     print(f"Message from {From}: {Body}")
