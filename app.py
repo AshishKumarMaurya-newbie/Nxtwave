@@ -197,6 +197,34 @@ async def root():
         return FileResponse("index.html", media_type="text/html")
     return {"status": "ok", "message": "NxtWave API is running!"}
 
+@app.get("/{file_path:path}")
+async def serve_static(file_path: str):
+    """Serve static files (CSS, JS, images, etc.)"""
+    file_full_path = os.path.join(".", file_path)
+    
+    # Security check - prevent directory traversal
+    if not os.path.abspath(file_full_path).startswith(os.path.abspath(".")):
+        return {"error": "File not found"}, 404
+    
+    if os.path.isfile(file_full_path):
+        # Determine media type based on file extension
+        if file_path.endswith('.css'):
+            return FileResponse(file_full_path, media_type="text/css")
+        elif file_path.endswith('.js'):
+            return FileResponse(file_full_path, media_type="application/javascript")
+        elif file_path.endswith('.png'):
+            return FileResponse(file_full_path, media_type="image/png")
+        elif file_path.endswith('.jpg') or file_path.endswith('.jpeg'):
+            return FileResponse(file_full_path, media_type="image/jpeg")
+        elif file_path.endswith('.gif'):
+            return FileResponse(file_full_path, media_type="image/gif")
+        elif file_path.endswith('.svg'):
+            return FileResponse(file_full_path, media_type="image/svg+xml")
+        else:
+            return FileResponse(file_full_path)
+    
+    return {"error": "File not found"}, 404
+
 @app.post("/webhook")
 async def whatsapp_webhook(Body: str = Form(...), From: str = Form(...)):
     print(f"Message from {From}: {Body}")
