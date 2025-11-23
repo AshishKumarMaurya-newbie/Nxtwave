@@ -8,15 +8,15 @@ RUN apt-get update && apt-get install -y \
     && rm -rf /var/lib/apt/lists/*
 
 # Copy project files
-COPY pyproject.toml uv.lock ./
+COPY pyproject.toml ./
 COPY app.py ./
 COPY knowledge_base.txt ./
 
 # Install Python dependencies
 RUN pip install --no-cache-dir -e .
 
-# Expose port
+# Expose port (Render uses PORT env variable)
 EXPOSE 8000
 
-# Run the app
-CMD ["uvicorn", "app:app", "--host", "0.0.0.0", "--port", "8000"]
+# Run the app - PORT is set by Render
+CMD ["sh", "-c", "uvicorn app:app --host 0.0.0.0 --port ${PORT:-8000}"]

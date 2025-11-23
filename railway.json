@@ -1,9 +1,20 @@
 {
-  "$schema": "https://railway.app/railway.schema.json",
-  "build": {
-    "builder": "dockerfile"
-  },
-  "deploy": {
-    "startCommand": "uvicorn app:app --host 0.0.0.0 --port $PORT"
+  "name": "nxtwave",
+  "description": "WhatsApp College Assistant Bot with Gemini AI",
+  "buildCommand": "pip install --no-cache-dir -e .",
+  "startCommand": "uvicorn app:app --host 0.0.0.0 --port $PORT",
+  "envs": {
+    "ACCOUNT_SID": {
+      "description": "Twilio Account SID"
+    },
+    "AUTH_TOKEN": {
+      "description": "Twilio Auth Token"
+    },
+    "TWILIO_WHATSAPP_NUMBER": {
+      "description": "Twilio WhatsApp number (format: whatsapp:+1234567890)"
+    },
+    "GOOGLE_API_KEY": {
+      "description": "Google API key for Gemini"
+    }
   }
 }

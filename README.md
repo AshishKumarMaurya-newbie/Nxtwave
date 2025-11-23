@@ -61,40 +61,56 @@ uvicorn app:app --reload
 
 The app will be available at `http://localhost:8000`
 
-### Deploy to Railway
+### Deploy to Render
 
 1. **Push to GitHub** (if not already done):
 ```bash
+cd c:\Users\akmbu\OneDrive\Desktop\Nxtwave-master\Nxtwave-master
 git init
 git add .
-git commit -m "Initial commit"
-git remote add origin <your-github-repo>
+git commit -m "Ready for Render deployment"
+git remote add origin https://github.com/YOUR_USERNAME/nxtwave.git
 git push -u origin main
 ```
 
-2. **Connect to Railway**:
-   - Go to [railway.app](https://railway.app)
-   - Sign in with GitHub
-   - Click "New Project" → "Deploy from GitHub repo"
-   - Select your repository
+2. **Connect to Render**:
+   - Go to [render.com](https://render.com)
+   - Sign up/login with GitHub
+   - Click "New +" → "Web Service"
+   - Select your GitHub repository
+   - Choose "Docker" as the environment
+   - Select the free plan
 
-3. **Configure Environment Variables**:
-   - In Railway dashboard, go to "Variables"
-   - Add the following:
-     - `ACCOUNT_SID` - Your Twilio Account SID
-     - `AUTH_TOKEN` - Your Twilio Auth Token
-     - `TWILIO_WHATSAPP_NUMBER` - Your WhatsApp number (format: `whatsapp:+1234567890`)
-     - `GOOGLE_API_KEY` - Your Google API key
+3. **Configure Settings in Render**:
+   - **Name**: `nxtwave-bot`
+   - **Region**: Choose closest to your users
+   - **Branch**: `main`
+   - Keep Docker build defaults
 
-4. **Add knowledge_base.txt**:
-   - The `knowledge_base.txt` file must be in the root directory
-   - Ensure it's committed to your GitHub repo (not in .gitignore)
+4. **Add Environment Variables** in Render dashboard:
+   - Click "Environment" and add:
+     - `ACCOUNT_SID` = your Twilio Account SID
+     - `AUTH_TOKEN` = your Twilio Auth Token
+     - `TWILIO_WHATSAPP_NUMBER` = `whatsapp:+1234567890` (your WhatsApp number)
+     - `GOOGLE_API_KEY` = your Google API key
 
-5. **Configure Twilio Webhook**:
-   - Get your Railway deployment URL from the dashboard
-   - Go to Twilio Console → WhatsApp → Settings
-   - Set Webhook URL to: `https://your-railway-url/webhook`
+5. **Deploy**:
+   - Click "Create Web Service"
+   - Wait for build and deployment (~3-5 minutes)
+   - Get your deployment URL from the Render dashboard
+
+6. **Configure Twilio Webhook**:
+   - Copy your Render URL (e.g., `https://nxtwave-bot.onrender.com`)
+   - Go to Twilio Console → WhatsApp Sandbox (or your business account)
+   - Set Webhook URL to: `https://your-render-url/webhook`
    - Method: POST
+   - Save
+
+7. **Important Notes**:
+   - The `knowledge_base.txt` must be committed to GitHub (it's in repo)
+   - Free tier on Render spins down after 15 minutes of inactivity
+   - For production, upgrade to paid plan for always-on service
+   - First deployment takes 3-5 minutes, subsequent deploys are faster
 
 ## API Endpoints
 
