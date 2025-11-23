@@ -1,6 +1,7 @@
 import os
 from fastapi import FastAPI, Form
-from fastapi.responses import PlainTextResponse
+from fastapi.responses import PlainTextResponse, FileResponse
+from fastapi.staticfiles import StaticFiles
 from contextlib import asynccontextmanager
 from indic_transliteration import sanscript
 from indic_transliteration.sanscript import transliterate
@@ -191,7 +192,10 @@ app = FastAPI(lifespan=lifespan)
 
 @app.get("/")
 async def root():
-    return {"status": "ok"}
+    """Serve the frontend HTML"""
+    if os.path.exists("index.html"):
+        return FileResponse("index.html", media_type="text/html")
+    return {"status": "ok", "message": "NxtWave API is running!"}
 
 @app.post("/webhook")
 async def whatsapp_webhook(Body: str = Form(...), From: str = Form(...)):

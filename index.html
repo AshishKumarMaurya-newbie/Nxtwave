@@ -357,7 +357,7 @@
         const messageInput = document.getElementById('messageInput');
         const languageSelect = document.getElementById('languageSelect');
 
-        // API endpoint - replace with your Render URL
+        // API endpoint
         const API_URL = 'https://nxtwave-vt22.onrender.com';
 
         function addMessage(text, isUser = false) {
@@ -415,22 +415,6 @@
             showTyping();
 
             try {
-                // Mock response for demo (replace with actual API call)
-                setTimeout(() => {
-                    removeTyping();
-                    
-                    const responses = [
-                        "Thank you for your question! Our admission team is reviewing your inquiry. You'll receive a response within 24 hours.",
-                        "Great question! For more detailed information, please visit our official website or contact our admission office.",
-                        "I'm here to help! If you need more information, feel free to ask another question or contact us directly.",
-                        "That's a common question! Here's what you need to know: Our college offers comprehensive support for all student needs.",
-                    ];
-
-                    const randomResponse = responses[Math.floor(Math.random() * responses.length)];
-                    addMessage(randomResponse, false);
-                }, 1000);
-
-                /* Uncomment this to use actual API:
                 const response = await fetch(`${API_URL}/webhook`, {
                     method: 'POST',
                     headers: {
@@ -442,13 +426,18 @@
                     })
                 });
 
-                const result = await response.text();
                 removeTyping();
-                addMessage(result, false);
-                */
+
+                if (!response.ok) {
+                    addMessage('Sorry, I encountered an error. Please try again later.', false);
+                    return;
+                }
+
+                const result = await response.text();
+                addMessage(result || 'Thank you for your question!', false);
             } catch (error) {
                 removeTyping();
-                addMessage('Sorry, I encountered an error. Please try again later.', false);
+                addMessage('Sorry, I encountered a connection error. Please check if the backend is running.', false);
                 console.error('Error:', error);
             }
         }
